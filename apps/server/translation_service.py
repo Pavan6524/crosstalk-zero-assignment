@@ -1,4 +1,4 @@
-
+import os
 import json
 import urllib.parse
 import urllib.request
@@ -125,6 +125,9 @@ class TranslationHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    server = HTTPServer(("127.0.0.1", 3002), TranslationHandler)
-    print("CrossTalk translation service running at http://127.0.0.1:3002")
+    host = "0.0.0.0"
+    port = int(os.environ.get("PORT", "3002"))
+
+    server = HTTPServer((host, port), TranslationHandler)
+    print(f"CrossTalk translation service running on port {port}")
     server.serve_forever()
