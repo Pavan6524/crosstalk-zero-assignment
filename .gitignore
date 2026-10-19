@@ -8,3 +8,5 @@ coverage/
 .code0/
 __pycache__/
 *.py[cod]
+.vite/
+apps/web/.vite/
