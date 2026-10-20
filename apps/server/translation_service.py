@@ -4,7 +4,31 @@ import urllib.parse
 import urllib.request
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+import argostranslate.package
 import argostranslate.translate
+import argostranslate.settings
+
+
+def load_argos_languages():
+    import os
+
+    print("[TranslationService] HOME:", os.environ.get("HOME"))
+    print(
+        "[TranslationService] Argos package directory:",
+        argostranslate.settings.package_data_dir,
+    )
+    print(
+        "[TranslationService] Package directory exists:",
+        os.path.isdir(argostranslate.settings.package_data_dir),
+    )
+
+    languages = argostranslate.translate.get_installed_languages()
+    print(
+        "[TranslationService] Languages found:",
+        [language.code for language in languages],
+    )
+
+    return {language.code: language for language in languages}
 
 
 def translate_with_mymemory(text):
@@ -85,12 +109,12 @@ class TranslationHandler(BaseHTTPRequestHandler):
                 return
 
 
-            languages = {
-                language.code: language
-                for language in argostranslate.translate.get_installed_languages()
-            }
+            languages = load_argos_languages()
 
-            print(f"[TranslationService] Installed languages: {sorted(languages.keys())}")
+            print(
+                f"[TranslationService] Installed languages: "
+                f"{sorted(languages.keys())}"
+            )
 
             if source not in languages or target not in languages:
                 self.send_json(400, {"error": "Unsupported language"})
