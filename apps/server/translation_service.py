@@ -35,18 +35,19 @@ def translate_with_mymemory(text):
 
 
 class TranslationHandler(BaseHTTPRequestHandler):
-   def do_GET(self):
-    path = urllib.parse.urlparse(self.path).path
+   
+    def do_GET(self):
+        path = urllib.parse.urlparse(self.path).path
 
-    if path == "/health":
-        self.send_json(200, {"status": "ok"})
-    else:
-        self.send_json(404, {"error": "Not found"})
+        if path == "/health":
+            self.send_json(200, {"status": "ok"})
+        else:
+            self.send_json(404, {"error": "Not found"})
 
     def do_POST(self):
-       path = urllib.parse.urlparse(self.path).path
+        path = urllib.parse.urlparse(self.path).path
 
-if path != "/translate":
+        if path != "/translate":
             self.send_json(404, {"error": "Not found"})
             return
 
@@ -70,7 +71,6 @@ if path != "/translate":
                 self.send_json(200, {"translatedText": text})
                 return
 
-            # Route Spanish -> English through MyMemory only.
             if source == "es" and target == "en":
                 try:
                     translated = translate_with_mymemory(text)
@@ -84,7 +84,6 @@ if path != "/translate":
                     )
                 return
 
-            # All other language pairs continue using local Argos.
             languages = {
                 language.code: language
                 for language in argostranslate.translate.get_installed_languages()
@@ -115,6 +114,7 @@ if path != "/translate":
         except Exception as error:
             print(f"[TranslationService] Translation error: {error}")
             self.send_json(500, {"error": "Translation failed"})
+
 
     def send_json(self, status, data):
         body = json.dumps(data, ensure_ascii=False).encode("utf-8")
