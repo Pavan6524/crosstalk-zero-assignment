@@ -35,14 +35,18 @@ def translate_with_mymemory(text):
 
 
 class TranslationHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == "/health":
-            self.send_json(200, {"status": "ok"})
-        else:
-            self.send_json(404, {"error": "Not found"})
+   def do_GET(self):
+    path = urllib.parse.urlparse(self.path).path
+
+    if path == "/health":
+        self.send_json(200, {"status": "ok"})
+    else:
+        self.send_json(404, {"error": "Not found"})
 
     def do_POST(self):
-        if self.path != "/translate":
+       path = urllib.parse.urlparse(self.path).path
+
+if path != "/translate":
             self.send_json(404, {"error": "Not found"})
             return
 
