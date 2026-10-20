@@ -84,10 +84,12 @@ class TranslationHandler(BaseHTTPRequestHandler):
                     )
                 return
 
-            languages = {
-                language.code: language
-                for language in argostranslate.translate.get_installed_languages()
-            }
+           languages = {
+    language.code: language
+    for language in argostranslate.translate.get_installed_languages()
+}
+
+print(f"[TranslationService] Installed languages: {sorted(languages.keys())}")
 
             if source not in languages or target not in languages:
                 self.send_json(400, {"error": "Unsupported language"})
